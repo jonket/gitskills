@@ -49,6 +49,33 @@ $ `git checkout -- test.txt`
 要克隆一个仓库，首先必须知道仓库的地址，然后使用`git clone <url>`命令克隆。  
 Git支持多种协议，包括https，但ssh协议速度最快。  
 
+### ● 创建与合并分支
+查看分支：`git branch`  
+创建分支：`git branch <name>`  
+切换分支：`git checkout <name>`或者`git switch <name>`  
+创建+切换分支：`git checkout -b <name>`或者`git switch -c <name>`  
+合并某分支到当前分支：`git merge <name>`  
+删除分支：`git branch -d <name>`  强制删除：`git branch -D <name>`  
+
+### ● 解决冲突
+当Git无法自动合并分支时，就必须首先解决冲突。解决冲突后，再提交，合并完成。  
+解决冲突就是把Git合并失败的文件手动编辑为我们希望的内容，再提交。  
+用`git log --graph`或者`git log --graph --pretty=oneline --abbrev-commit`命令可以看到分支合并图。  
+
+### ● 分支管理策略
+合并分支时，加上--no-ff参数就可以用普通模式合并，合并后的历史有分支，能看出来曾经做过合并，而fast forward合并就看不出来曾经做过合并。  
+$ `git merge --no-ff -m "merge with no-ff" dev`
+
+### ● Bug分支
+修复bug时，我们会通过创建新的bug分支进行修复，然后合并，最后删除；  
+当手头工作没有完成时，先把工作现场`git stash`一下，然后去修复bug，修复后，再`git stash pop`，回到工作现场，使用`git stash list`命令查看工作现场保存列表； 
+ 
+Git把stash内容存在某个地方了，但是需要恢复一下，有两个办法：  
++ 一是用git stash apply恢复，但是恢复后，stash内容并不删除，你需要用git stash drop来删除，例：`git stash apply stash@{0}`；  
++ 另一种方式是用git stash pop，恢复的同时把stash内容也删了。  
+
+在master分支上修复的bug，想要合并到当前dev分支，可以用`git cherry-pick <commit_id>`命令，把bug提交的修改“复制”到当前分支，避免重复劳动。  
+
 ### ● 忽略特殊文件
 忽略某些文件时，需要编写`.gitignore`文件，需要放到版本库里。  
 + 强制添加被忽略的文件：`git add -f App.class`
